@@ -17,24 +17,30 @@ export class LocalBroker implements IBroker {
 
 	private services = new Set<IServiceClass>();
 
-	async call(method: string, data: any): Promise<any> {
-		return tracerActiveSpan(
-			`action ${method}`,
-			{},
-			() => {
-				return asyncLocalStorage.run(
-					{
-						id: 'ctx.id',
-						nodeID: 'ctx.nodeID',
-						requestID: 'ctx.requestID',
-						broker: this,
-					},
-					(): any => this.methods.get(method)?.(...data),
-				);
-			},
-			injectCurrentContext(),
-		);
-	}
+       async call(method: string, data: any): Promise<any> {
+               return tracerActiveSpan(
+                       `action ${method}`,
+                       {},
+                       () => {
+                               return asyncLocalStorage.run(
+                                       {
+                                               id: 'ctx.id',
+                                               nodeID: 'ctx.nodeID',
+                                               requestID: 'ctx.requestID',
+                                               broker: this,
+                                       },
+                                       (): any => {
+                                               const fn = this.methods.get(method);
+                                               if (!fn) {
+                                                       return;
+                                               }
+                                               return Array.isArray(data) ? fn(...data) : fn(data);
+                                       },
+                               );
+                       },
+                       injectCurrentContext(),
+               );
+       }
 
 	async destroyService(instance: ServiceClass): Promise<void> {
 		const namespace = instance.getName();

@@ -41,8 +41,8 @@ describe('LocalBroker', () => {
 		});
 	});
 
-	describe('#broadcast()', () => {
-		it('should call all the ServiceClass instance registered events', () => {
+        describe('#broadcast()', () => {
+                it('should call all the ServiceClass instance registered events', () => {
 			const instance = new (class extends ServiceClass {})();
 			const testListener = jest.fn();
 			const testListener2 = jest.fn();
@@ -61,7 +61,7 @@ describe('LocalBroker', () => {
 			expect(test2Listener).toBeCalledWith('test2');
 		});
 
-		it('should NOT call any instance event anymore after the service being destroyed', () => {
+                it('should NOT call any instance event anymore after the service being destroyed', () => {
 			const instance = new (class extends ServiceClass {})();
 			const testListener = jest.fn();
 			const test2Listener = jest.fn();
@@ -77,6 +77,28 @@ describe('LocalBroker', () => {
 
 			expect(testListener).not.toBeCalled();
 			expect(test2Listener).not.toBeCalled();
-		});
-	});
+                });
+        });
+
+       describe('#call()', () => {
+               it('should support calling a method with an object parameter', async () => {
+                       const methodStub = jest.fn();
+                       class TestService extends ServiceClass {
+                               getName() {
+                                       return 'test';
+                               }
+
+                               method(data: { foo: string }) {
+                                       methodStub(data);
+                               }
+                       }
+
+                       const broker = new LocalBroker();
+                       broker.createService(new TestService());
+
+                       await broker.call('test.method', { foo: 'bar' });
+
+                       expect(methodStub).toBeCalledWith({ foo: 'bar' });
+               });
+       });
 });
