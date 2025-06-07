@@ -12,13 +12,12 @@ import {
 	ToggleSwitch,
 	Icon,
 	FieldGroup,
-	ContextualbarFooter,
 	Button,
 	Callout,
 	Skeleton,
 } from '@rocket.chat/fuselage';
 import type { SelectOption } from '@rocket.chat/fuselage';
-import { useUniqueId, useMutableCallback } from '@rocket.chat/fuselage-hooks';
+import { useEffectEvent } from '@rocket.chat/fuselage-hooks';
 import type { UserCreateParamsPOST } from '@rocket.chat/rest-typings';
 import { CustomFieldsForm } from '@rocket.chat/ui-client';
 import {
@@ -30,7 +29,8 @@ import {
 	useTranslation,
 } from '@rocket.chat/ui-contexts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import DOMPurify from 'dompurify';
+import { useId, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import AdminUserSetRandomPasswordContent from './AdminUserSetRandomPasswordContent';
@@ -39,7 +39,7 @@ import PasswordFieldSkeleton from './PasswordFieldSkeleton';
 import { useSmtpQuery } from './hooks/useSmtpQuery';
 import { validateEmail } from '../../../../lib/emailValidator';
 import { parseCSV } from '../../../../lib/utils/parseCSV';
-import { ContextualbarScrollableContent } from '../../../components/Contextualbar';
+import { ContextualbarScrollableContent, ContextualbarFooter } from '../../../components/Contextualbar';
 import UserAvatarEditor from '../../../components/avatar/UserAvatarEditor';
 import { useEndpointAction } from '../../../hooks/useEndpointAction';
 import { useUpdateAvatar } from '../../../hooks/useUpdateAvatar';
@@ -51,7 +51,7 @@ type AdminUserFormProps = {
 	context: string;
 	refetchUserFormData?: () => void;
 	roleData: { roles: IRole[] } | undefined;
-	roleError: unknown;
+	roleError: Error | null;
 };
 
 export type UserFormProps = Omit<UserCreateParamsPOST & { avatar: AvatarObject; passwordConfirmation: string }, 'fields'>;
@@ -165,7 +165,7 @@ const AdminUserForm = ({ userData, onReload, context, refetchUserFormData, roleD
 		},
 	});
 
-	const handleSaveUser = useMutableCallback(async (userFormPayload: UserFormProps) => {
+	const handleSaveUser = useEffectEvent(async (userFormPayload: UserFormProps) => {
 		const { avatar, passwordConfirmation, ...userFormData } = userFormPayload;
 
 		if (!isNewUserPage && userData?._id) {
@@ -175,18 +175,18 @@ const AdminUserForm = ({ userData, onReload, context, refetchUserFormData, roleD
 		return handleCreateUser.mutateAsync({ ...userFormData, fields: '' });
 	});
 
-	const nameId = useUniqueId();
-	const usernameId = useUniqueId();
-	const emailId = useUniqueId();
-	const verifiedId = useUniqueId();
-	const statusTextId = useUniqueId();
-	const bioId = useUniqueId();
-	const nicknameId = useUniqueId();
-	const passwordId = useUniqueId();
-	const rolesId = useUniqueId();
-	const joinDefaultChannelsId = useUniqueId();
-	const sendWelcomeEmailId = useUniqueId();
-	const setRandomPasswordId = useUniqueId();
+	const nameId = useId();
+	const usernameId = useId();
+	const emailId = useId();
+	const verifiedId = useId();
+	const statusTextId = useId();
+	const bioId = useId();
+	const nicknameId = useId();
+	const passwordId = useId();
+	const rolesId = useId();
+	const joinDefaultChannelsId = useId();
+	const sendWelcomeEmailId = useId();
+	const setRandomPasswordId = useId();
 
 	const [showCustomFields, setShowCustomFields] = useState(true);
 
@@ -270,13 +270,15 @@ const AdminUserForm = ({ userData, onReload, context, refetchUserFormData, roleD
 								{isVerificationNeeded && !isSmtpEnabled && (
 									<FieldHint
 										id={`${verifiedId}-hint`}
-										dangerouslySetInnerHTML={{ __html: t('Send_Email_SMTP_Warning', { url: 'admin/settings/Email' }) }}
+										dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t('Send_Email_SMTP_Warning', { url: 'admin/settings/Email' })) }}
 									/>
 								)}
 								{!isVerificationNeeded && (
 									<FieldHint
 										id={`${verifiedId}-hint`}
-										dangerouslySetInnerHTML={{ __html: t('Email_verification_isnt_required', { url: 'admin/settings/Accounts' }) }}
+										dangerouslySetInnerHTML={{
+											__html: DOMPurify.sanitize(t('Email_verification_isnt_required', { url: 'admin/settings/Accounts' })),
+										}}
 									/>
 								)}
 							</>
@@ -363,7 +365,7 @@ const AdminUserForm = ({ userData, onReload, context, refetchUserFormData, roleD
 					<Field>
 						<FieldLabel htmlFor={rolesId}>{t('Roles')}</FieldLabel>
 						<FieldRow>
-							{roleError && <Callout>{roleError}</Callout>}
+							{roleError && <Callout>{roleError.message}</Callout>}
 							{!roleError && (
 								<Controller
 									control={control}
@@ -429,7 +431,7 @@ const AdminUserForm = ({ userData, onReload, context, refetchUserFormData, roleD
 								{!isSmtpEnabled && (
 									<FieldHint
 										id={`${sendWelcomeEmailId}-hint`}
-										dangerouslySetInnerHTML={{ __html: t('Send_Email_SMTP_Warning', { url: 'admin/settings/Email' }) }}
+										dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t('Send_Email_SMTP_Warning', { url: 'admin/settings/Email' })) }}
 										mbs={0}
 									/>
 								)}

@@ -47,7 +47,7 @@ type RoomListRowProps = {
 			actions: unknown;
 			href: string;
 			time?: Date;
-			menu?: ReactNode;
+			menu?: () => ReactNode;
 			menuOptions?: unknown;
 			subtitle?: ReactNode;
 			titleIcon?: string;
@@ -124,8 +124,13 @@ const SidebarItemTemplateWithData = ({
 	const badges = (
 		<>
 			{showUnread && (
-				<SidebarV2ItemBadge variant={unreadVariant} title={unreadTitle} role='status'>
-					{unreadCount.total}
+				<SidebarV2ItemBadge
+					variant={unreadVariant}
+					title={unreadTitle}
+					role='status'
+					aria-label={t('__unreadTitle__from__roomTitle__', { unreadTitle, roomTitle: title })}
+				>
+					<span aria-hidden>{unreadCount.total}</span>
 				</SidebarV2ItemBadge>
 			)}
 			{isOmnichannelRoom(room) && <OmnichannelBadges room={room} />}
@@ -144,7 +149,7 @@ const SidebarItemTemplateWithData = ({
 			onClick={(): void => {
 				!selected && sidebar.toggle();
 			}}
-			aria-label={title}
+			aria-label={showUnread ? t('__unreadTitle__from__roomTitle__', { unreadTitle, roomTitle: title }) : title}
 			title={title}
 			time={lastMessage?.ts}
 			subtitle={subtitle}
@@ -154,22 +159,21 @@ const SidebarItemTemplateWithData = ({
 			avatar={AvatarTemplate && <AvatarTemplate {...room} />}
 			actions={actions}
 			menu={
-				!isIOsDevice &&
-				!isAnonymous &&
-				(!isQueued || (isQueued && isPriorityEnabled)) &&
-				((): ReactElement => (
-					<RoomMenu
-						alert={alert}
-						threadUnread={unreadCount.threads > 0}
-						rid={rid}
-						unread={!!unread}
-						roomOpen={selected}
-						type={type}
-						cl={cl}
-						name={title}
-						hideDefaultOptions={isQueued}
-					/>
-				))
+				!isIOsDevice && !isAnonymous && (!isQueued || (isQueued && isPriorityEnabled))
+					? (): ReactElement => (
+							<RoomMenu
+								alert={alert}
+								threadUnread={unreadCount.threads > 0}
+								rid={rid}
+								unread={!!unread}
+								roomOpen={selected}
+								type={type}
+								cl={cl}
+								name={title}
+								hideDefaultOptions={isQueued}
+							/>
+						)
+					: undefined
 			}
 		/>
 	);

@@ -1,6 +1,6 @@
 import type { IOmnichannelRoomWithDepartment } from '@rocket.chat/core-typings';
 import { Callout, Pagination } from '@rocket.chat/fuselage';
-import { useMutableCallback } from '@rocket.chat/fuselage-hooks';
+import { useEffectEvent } from '@rocket.chat/fuselage-hooks';
 import type { GETLivechatRoomsParams } from '@rocket.chat/rest-typings';
 import { usePermission, useRouter } from '@rocket.chat/ui-contexts';
 import { hashKey } from '@tanstack/react-query';
@@ -167,7 +167,7 @@ const CurrentChatsPage = ({ id, onRowClick }: { id?: string; onRowClick: (_id: s
 	const [defaultQuery] = useState(hashKey([query]));
 	const queryHasChanged = defaultQuery !== hashKey([query]);
 
-	const onFilter = useMutableCallback((params: DebouncedParams): void => {
+	const onFilter = useEffectEvent((params: DebouncedParams): void => {
 		setParams(params);
 		setCurrent(0);
 	});
@@ -307,7 +307,7 @@ const CurrentChatsPage = ({ id, onRowClick }: { id?: string; onRowClick: (_id: s
 			<Page>
 				<PageHeader title={t('Current_Chats')} />
 				<PageContent>
-					<Callout type='warning' title={t('This_page_will_be_deprecated_soon')}>
+					<Callout type='warning' title={t('This_page_is_deprecated_will_be_removed_soon')}>
 						<Trans i18nKey='Manage_conversations_in_the_contact_center'>
 							Manage conversations in the
 							<a href={directoryPath}>contact center</a>.

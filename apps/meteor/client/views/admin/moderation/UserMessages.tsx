@@ -1,5 +1,5 @@
 import { Box, Callout, Message, StatesAction, StatesActions, StatesIcon, StatesTitle } from '@rocket.chat/fuselage';
-import { useMutableCallback } from '@rocket.chat/fuselage-hooks';
+import { useEffectEvent } from '@rocket.chat/fuselage-hooks';
 import { useEndpoint } from '@rocket.chat/ui-contexts';
 import { useQuery } from '@tanstack/react-query';
 import { Fragment } from 'react';
@@ -10,6 +10,7 @@ import ContextMessage from './helpers/ContextMessage';
 import { ContextualbarFooter } from '../../../components/Contextualbar';
 import GenericNoResults from '../../../components/GenericNoResults';
 
+// TODO: We should use Contextualbar components here
 const UserMessages = ({ userId, onRedirect }: { userId: string; onRedirect: (mid: string) => void }) => {
 	const { t } = useTranslation();
 	const getUserMessages = useEndpoint('GET', '/v1/moderation.user.reportedMessages');
@@ -31,7 +32,7 @@ const UserMessages = ({ userId, onRedirect }: { userId: string; onRedirect: (mid
 		},
 	});
 
-	const handleChange = useMutableCallback(() => {
+	const handleChange = useEffectEvent(() => {
 		reloadUserMessages();
 	});
 

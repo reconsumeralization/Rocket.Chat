@@ -1,5 +1,5 @@
 import { isDirectMessageRoom } from '@rocket.chat/core-typings';
-import { useMutableCallback } from '@rocket.chat/fuselage-hooks';
+import { useEffectEvent } from '@rocket.chat/fuselage-hooks';
 import { useSetModal, useToastMessageDispatch, useEndpoint } from '@rocket.chat/ui-contexts';
 import moment from 'moment';
 import type { ReactElement } from 'react';
@@ -69,7 +69,7 @@ const PruneMessagesWithData = (): ReactElement => {
 		return new Date(`${olderDate || '9999-12-31'}T${olderTime || '23:59'}:59${getTimeZoneOffset()}`);
 	}, [olderDate, olderTime]);
 
-	const handlePrune = useMutableCallback((): void => {
+	const handlePrune = useEffectEvent((): void => {
 		const handlePruneAction = async () => {
 			const limit = DEFAULT_PRUNE_LIMIT;
 
@@ -94,10 +94,13 @@ const PruneMessagesWithData = (): ReactElement => {
 				setCounter(count);
 
 				if (count < 1) {
-					throw new Error(t('No_messages_found_to_prune'));
+					throw new Error(attached ? t('No_files_found_to_prune') : t('No_messages_found_to_prune'));
 				}
 
-				dispatchToastMessage({ type: 'success', message: t('__count__message_pruned', { count }) });
+				dispatchToastMessage({
+					type: 'success',
+					message: attached ? t('__count__file_pruned', { count }) : t('__count__message_pruned', { count }),
+				});
 				methods.reset();
 			} catch (error: unknown) {
 				dispatchToastMessage({ type: 'error', message: error });

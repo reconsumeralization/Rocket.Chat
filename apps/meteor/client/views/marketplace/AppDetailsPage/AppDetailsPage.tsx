@@ -1,7 +1,7 @@
 import type { ISetting } from '@rocket.chat/apps-engine/definition/settings';
 import type { App, SettingValue } from '@rocket.chat/core-typings';
 import { Button, ButtonGroup, Box } from '@rocket.chat/fuselage';
-import { useMutableCallback } from '@rocket.chat/fuselage-hooks';
+import { useEffectEvent } from '@rocket.chat/fuselage-hooks';
 import { useTranslation, useRouteParameter, useToastMessageDispatch, usePermission, useRouter } from '@rocket.chat/ui-contexts';
 import type { ReactElement } from 'react';
 import { useMemo, useCallback } from 'react';
@@ -37,7 +37,7 @@ const AppDetailsPage = ({ id }: AppDetailsPageProps): ReactElement => {
 	const context = useRouteParameter('context');
 	const appData = useAppInfo(id, context || '');
 
-	const handleReturn = useMutableCallback((): void => {
+	const handleReturn = useEffectEvent((): void => {
 		if (!context) {
 			return;
 		}
@@ -51,25 +51,6 @@ const AppDetailsPage = ({ id }: AppDetailsPageProps): ReactElement => {
 	const { installed, settings, privacyPolicySummary, permissions, tosLink, privacyLink, name } = appData || {};
 	const isSecurityVisible = Boolean(privacyPolicySummary || permissions || tosLink || privacyLink);
 
-	const saveAppSettings = useCallback(
-		async (data: AppDetailsPageFormData) => {
-			try {
-				await AppClientOrchestratorInstance.setAppSettings(
-					id,
-					(Object.values(settings || {}) as ISetting[]).map((setting) => ({
-						...setting,
-						value: data[setting.id],
-					})),
-				);
-
-				dispatchToastMessage({ type: 'success', message: `${name} settings saved succesfully` });
-			} catch (e: any) {
-				handleAPIError(e);
-			}
-		},
-		[dispatchToastMessage, id, name, settings],
-	);
-
 	const reducedSettings = useMemo((): AppDetailsPageFormData => {
 		return Object.values(settings || {}).reduce(
 			(ret: AppDetailsPageFormData, { id, value, packageValue }) => ({ ...ret, [id]: value ?? packageValue }),
@@ -81,8 +62,27 @@ const AppDetailsPage = ({ id }: AppDetailsPageProps): ReactElement => {
 	const {
 		handleSubmit,
 		reset,
-		formState: { isDirty, isSubmitting, isSubmitted },
+		formState: { isDirty, isSubmitting },
 	} = methods;
+
+	const saveAppSettings = useCallback(
+		async (data: AppDetailsPageFormData) => {
+			try {
+				await AppClientOrchestratorInstance.setAppSettings(
+					id,
+					(Object.values(settings || {}) as ISetting[]).map((setting) => ({
+						...setting,
+						value: data[setting.id],
+					})),
+				);
+				reset(data);
+				dispatchToastMessage({ type: 'success', message: t('App_Settings_Saved_Successfully', { appName: name }) });
+			} catch (e: any) {
+				handleAPIError(e);
+			}
+		},
+		[dispatchToastMessage, id, name, settings, reset],
+	);
 
 	return (
 		<Page flexDirection='column' h='full'>
@@ -125,7 +125,7 @@ const AppDetailsPage = ({ id }: AppDetailsPageProps): ReactElement => {
 				<ButtonGroup>
 					<Button onClick={() => reset()}>{t('Cancel')}</Button>
 					{installed && isAdminUser && (
-						<Button primary loading={isSubmitting || isSubmitted} onClick={handleSubmit(saveAppSettings)}>
+						<Button primary loading={isSubmitting} onClick={handleSubmit(saveAppSettings)}>
 							{t('Save_changes')}
 						</Button>
 					)}
