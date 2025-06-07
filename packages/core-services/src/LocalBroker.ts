@@ -17,33 +17,39 @@ export class LocalBroker implements IBroker {
 
 	private services = new Set<IServiceClass>();
 
-       async call(method: string, data: any): Promise<any> {
-               return tracerActiveSpan(
-                       `action ${method}`,
-                       {},
-                       () => {
-                               return asyncLocalStorage.run(
-                                       {
-                                               id: 'ctx.id',
-                                               nodeID: 'ctx.nodeID',
-                                               requestID: 'ctx.requestID',
-                                               broker: this,
-                                       },
-                                       (): any => {
-                                               const fn = this.methods.get(method);
-                                               if (!fn) {
-                                                       return;
-                                               }
-                                               return Array.isArray(data) ? fn(...data) : fn(data);
-                                       },
-                               );
-                       },
-                       injectCurrentContext(),
-               );
-       }
+	async call(method: string, data?: any): Promise<any> {
+		return tracerActiveSpan(
+			`action ${method}`,
+			{},
+			() => {
+				return asyncLocalStorage.run(
+					{
+						id: 'ctx.id',
+						nodeID: 'ctx.nodeID',
+						requestID: 'ctx.requestID',
+						broker: this,
+					},
+					(): any => {
+						const fn = this.methods.get(method);
+						if (!fn) {
+							return;
+						}
+						if (Array.isArray(data)) {
+							return fn(...data);
+						}
+						if (typeof data === 'undefined') {
+							return fn();
+						}
+						return fn(data);
+					},
+				);
+			},
+			injectCurrentContext(),
+		);
+	}
 
-        async destroyService(instance: ServiceClass): Promise<void> {
-                const namespace = instance.getName();
+	async destroyService(instance: ServiceClass): Promise<void> {
+		const namespace = instance.getName();
 
 		instance.getEvents().forEach((event) => event.listeners.forEach((listener) => this.events.removeListener(event.eventName, listener)));
 
@@ -58,10 +64,10 @@ export class LocalBroker implements IBroker {
 
 			this.methods.delete(`${namespace}.${method}`);
 		}
-                instance.removeAllListeners();
-                await instance.stopped();
-                this.services.delete(instance);
-        }
+		instance.removeAllListeners();
+		await instance.stopped();
+		this.services.delete(instance);
+	}
 
 	createService(instance: IServiceClass): void {
 		const namespace = instance.getName();

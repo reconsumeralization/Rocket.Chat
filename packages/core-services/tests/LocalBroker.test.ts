@@ -2,9 +2,9 @@ import { ServiceClass } from '../src';
 import { LocalBroker } from '../src/LocalBroker';
 
 jest.mock('@rocket.chat/models', () => ({
-       InstanceStatus: {
-               find: jest.fn().mockReturnValue({ toArray: () => Promise.resolve([]) }),
-       },
+	InstanceStatus: {
+		find: jest.fn().mockReturnValue({ toArray: () => Promise.resolve([]) }),
+	},
 }));
 
 describe('LocalBroker', () => {
@@ -24,8 +24,8 @@ describe('LocalBroker', () => {
 		});
 	});
 
-        describe('#destroyService()', () => {
-                it('should call all the expected lifecycle hooks when destroying a service', () => {
+	describe('#destroyService()', () => {
+		it('should call all the expected lifecycle hooks when destroying a service', () => {
 			const removeAllListenersStub = jest.fn();
 			const stoppedStub = jest.fn();
 			const instance = new (class extends ServiceClass {
@@ -42,30 +42,30 @@ describe('LocalBroker', () => {
 			broker.createService(instance);
 			broker.destroyService(instance);
 
-                        expect(removeAllListenersStub).toBeCalled();
-                        expect(stoppedStub).toBeCalled();
-                });
+			expect(removeAllListenersStub).toBeCalled();
+			expect(stoppedStub).toBeCalled();
+		});
 
-                it('should remove the service from the internal registry', async () => {
-                        const startedStub = jest.fn();
-                        const instance = new (class extends ServiceClass {
-                                async started() {
-                                        startedStub();
-                                }
-                        })();
+		it('should remove the service from the internal registry', async () => {
+			const startedStub = jest.fn();
+			const instance = new (class extends ServiceClass {
+				async started() {
+					startedStub();
+				}
+			})();
 
-                        const broker = new LocalBroker();
-                        broker.createService(instance);
-                        broker.destroyService(instance);
+			const broker = new LocalBroker();
+			broker.createService(instance);
+			broker.destroyService(instance);
 
-                        await broker.start();
+			await broker.start();
 
-                        expect(startedStub).not.toBeCalled();
-                });
-        });
+			expect(startedStub).not.toBeCalled();
+		});
+	});
 
-        describe('#broadcast()', () => {
-                it('should call all the ServiceClass instance registered events', () => {
+	describe('#broadcast()', () => {
+		it('should call all the ServiceClass instance registered events', () => {
 			const instance = new (class extends ServiceClass {})();
 			const testListener = jest.fn();
 			const testListener2 = jest.fn();
@@ -84,7 +84,7 @@ describe('LocalBroker', () => {
 			expect(test2Listener).toBeCalledWith('test2');
 		});
 
-                it('should NOT call any instance event anymore after the service being destroyed', () => {
+		it('should NOT call any instance event anymore after the service being destroyed', () => {
 			const instance = new (class extends ServiceClass {})();
 			const testListener = jest.fn();
 			const test2Listener = jest.fn();
@@ -100,28 +100,49 @@ describe('LocalBroker', () => {
 
 			expect(testListener).not.toBeCalled();
 			expect(test2Listener).not.toBeCalled();
-                });
-        });
+		});
+	});
 
-       describe('#call()', () => {
-               it('should support calling a method with an object parameter', async () => {
-                       const methodStub = jest.fn();
-                       class TestService extends ServiceClass {
-                               getName() {
-                                       return 'test';
-                               }
+	describe('#call()', () => {
+		it('should support calling a method with an object parameter', async () => {
+			const methodStub = jest.fn();
+			class TestService extends ServiceClass {
+				getName() {
+					return 'test';
+				}
 
-                               method(data: { foo: string }) {
-                                       methodStub(data);
-                               }
-                       }
+				method(data: { foo: string }) {
+					methodStub(data);
+				}
+			}
 
-                       const broker = new LocalBroker();
-                       broker.createService(new TestService());
+			const broker = new LocalBroker();
+			broker.createService(new TestService());
 
-                       await broker.call('test.method', { foo: 'bar' });
+			await broker.call('test.method', { foo: 'bar' });
 
-                       expect(methodStub).toBeCalledWith({ foo: 'bar' });
-               });
-       });
+			expect(methodStub).toBeCalledWith({ foo: 'bar' });
+		});
+
+		it('should not pass undefined when no parameter is provided', async () => {
+			const methodStub = jest.fn();
+			class TestService extends ServiceClass {
+				getName() {
+					return 'test';
+				}
+
+				method() {
+					methodStub();
+				}
+			}
+
+			const broker = new LocalBroker();
+			broker.createService(new TestService());
+
+			await broker.call('test.method');
+
+			expect(methodStub).toBeCalledTimes(1);
+			expect(methodStub).toBeCalledWith();
+		});
+	});
 });
