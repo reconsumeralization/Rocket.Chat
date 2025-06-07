@@ -1,6 +1,12 @@
 import { ServiceClass } from '../src';
 import { LocalBroker } from '../src/LocalBroker';
 
+jest.mock('@rocket.chat/models', () => ({
+       InstanceStatus: {
+               find: jest.fn().mockReturnValue({ toArray: () => Promise.resolve([]) }),
+       },
+}));
+
 describe('LocalBroker', () => {
 	describe('#createService()', () => {
 		it('should call all the expected lifecycle hooks when creating a service', () => {
