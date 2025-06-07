@@ -116,6 +116,13 @@ You can develop your own app that can be integrated with Rocket.Chat. We provide
 - [Apps Engine Development](https://developer.rocket.chat/apps-engine/rocket.chat-apps-and-apps-engine)
 - [See who's using Rocket.Chat](https://www.rocket.chat/customers)
 
+## ✨ AI Utilities
+
+Rocket.Chat now ships with experimental AI helpers under `packages/ai-utils`.
+The first utility, `analyzeSentiment`, exposes simple sentiment analysis that
+other packages can leverage to build features such as automatic tone detection
+or message tagging.
+
 # 🆕 Feature Request
 
 [Rocket.Chat/feature-requests](https://github.com/RocketChat/feature-requests) is used to track Rocket.Chat feature requests and discussions. Click [here](https://github.com/RocketChat/feature-requests/issues/new?template=feature_request.md) to open a new feature request. [Feature Request Forums](https://forums.rocket.chat/c/feature-requests/8) stores the historical archives of old feature requests (up to 2018).
