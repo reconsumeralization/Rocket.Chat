@@ -1,5 +1,29 @@
 # @rocket.chat/meteor
 
+
+## 7.2.0
+
+### Minor Changes
+- Adds a new `contacts.checkExistence` endpoint to verify contact information by email, phone, id, or visitor association
+- Enables Rocket.Chat to store call events for analytics
+- Adds statistics related to Contact Identification, including counts of contacts, conflicts, and identification-related actions
+- Disables selection of OTR messages when exporting messages
+- Organizes the App Settings page with section-based accordions for easier navigation
+- Adds the ability to download exported messages as a JSON file directly from the client
+- Improves workspace and subscription admin pages with updated font scaling and responsiveness
+- Introduces a callout on the subscription page highlighting upgrade eligibility
+
+### Patch Changes
+- Fixes the apps-engine losing communication with subprocesses
+- Fixes clients not receiving server notifications immediately after login
+- Fixes incorrect migration number displayed on the Information page
+- Fixes update banner not showing the new version number
+- Fixes unread thread badge remaining when the only message in a thread is removed
+- Fixes `im.counters` returning null for unread messages when the DM has never been opened
+- Fixes contact updates failing if a custom field was removed from the workspace
+- Fixes notification sounds playing randomly
+- Updates dependencies
+
 ## 7.1.0
 
 ### Minor Changes
