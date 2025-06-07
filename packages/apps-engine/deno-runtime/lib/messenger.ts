@@ -167,12 +167,20 @@ export function pongResponse(): Promise<void> {
     return Promise.resolve(Queue.enqueue(COMMAND_PONG));
 }
 
-export async function sendRequest(requestDescriptor: RequestDescriptor): Promise<jsonrpc.SuccessObject> {
-    const request = jsonrpc.request(Math.random().toString(36).slice(2), requestDescriptor.method, requestDescriptor.params);
+export async function sendRequest(
+    requestDescriptor: RequestDescriptor,
+    timeout = 5000,
+): Promise<jsonrpc.SuccessObject> {
+    const request = jsonrpc.request(
+        Math.random().toString(36).slice(2),
+        requestDescriptor.method,
+        requestDescriptor.params,
+    );
 
-    // TODO: add timeout to this
     const responsePromise = new Promise((resolve, reject) => {
         const handler = (event: Event) => {
+            clearTimeout(timer);
+
             if (event instanceof ErrorEvent) {
                 reject(event.error);
             }
@@ -181,8 +189,19 @@ export async function sendRequest(requestDescriptor: RequestDescriptor): Promise
                 resolve(event.detail);
             }
 
-            RPCResponseObserver.removeEventListener(`response:${request.id}`, handler);
+            RPCResponseObserver.removeEventListener(
+                `response:${request.id}`,
+                handler,
+            );
         };
+
+        const timer = setTimeout(() => {
+            RPCResponseObserver.removeEventListener(
+                `response:${request.id}`,
+                handler,
+            );
+            reject(new Error('Response timed out'));
+        }, timeout);
 
         RPCResponseObserver.addEventListener(`response:${request.id}`, handler);
     });
