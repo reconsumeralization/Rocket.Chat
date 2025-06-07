@@ -24,8 +24,8 @@ describe('LocalBroker', () => {
 		});
 	});
 
-	describe('#destroyService()', () => {
-		it('should call all the expected lifecycle hooks when destroying a service', () => {
+        describe('#destroyService()', () => {
+                it('should call all the expected lifecycle hooks when destroying a service', () => {
 			const removeAllListenersStub = jest.fn();
 			const stoppedStub = jest.fn();
 			const instance = new (class extends ServiceClass {
@@ -42,10 +42,27 @@ describe('LocalBroker', () => {
 			broker.createService(instance);
 			broker.destroyService(instance);
 
-			expect(removeAllListenersStub).toBeCalled();
-			expect(stoppedStub).toBeCalled();
-		});
-	});
+                        expect(removeAllListenersStub).toBeCalled();
+                        expect(stoppedStub).toBeCalled();
+                });
+
+                it('should remove the service from the internal registry', async () => {
+                        const startedStub = jest.fn();
+                        const instance = new (class extends ServiceClass {
+                                async started() {
+                                        startedStub();
+                                }
+                        })();
+
+                        const broker = new LocalBroker();
+                        broker.createService(instance);
+                        broker.destroyService(instance);
+
+                        await broker.start();
+
+                        expect(startedStub).not.toBeCalled();
+                });
+        });
 
         describe('#broadcast()', () => {
                 it('should call all the ServiceClass instance registered events', () => {

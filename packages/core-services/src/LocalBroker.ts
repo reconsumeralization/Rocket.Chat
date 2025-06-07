@@ -42,8 +42,8 @@ export class LocalBroker implements IBroker {
                );
        }
 
-	async destroyService(instance: ServiceClass): Promise<void> {
-		const namespace = instance.getName();
+        async destroyService(instance: ServiceClass): Promise<void> {
+                const namespace = instance.getName();
 
 		instance.getEvents().forEach((event) => event.listeners.forEach((listener) => this.events.removeListener(event.eventName, listener)));
 
@@ -58,9 +58,10 @@ export class LocalBroker implements IBroker {
 
 			this.methods.delete(`${namespace}.${method}`);
 		}
-		instance.removeAllListeners();
-		await instance.stopped();
-	}
+                instance.removeAllListeners();
+                await instance.stopped();
+                this.services.delete(instance);
+        }
 
 	createService(instance: IServiceClass): void {
 		const namespace = instance.getName();
