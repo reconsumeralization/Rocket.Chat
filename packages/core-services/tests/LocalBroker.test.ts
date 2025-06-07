@@ -1,6 +1,12 @@
 import { ServiceClass } from '../src';
 import { LocalBroker } from '../src/LocalBroker';
 
+jest.mock('@rocket.chat/models', () => ({
+	InstanceStatus: {
+		find: jest.fn().mockReturnValue({ toArray: () => Promise.resolve([]) }),
+	},
+}));
+
 describe('LocalBroker', () => {
 	describe('#createService()', () => {
 		it('should call all the expected lifecycle hooks when creating a service', () => {
@@ -38,6 +44,23 @@ describe('LocalBroker', () => {
 
 			expect(removeAllListenersStub).toBeCalled();
 			expect(stoppedStub).toBeCalled();
+		});
+
+		it('should remove the service from the internal registry', async () => {
+			const startedStub = jest.fn();
+			const instance = new (class extends ServiceClass {
+				async started() {
+					startedStub();
+				}
+			})();
+
+			const broker = new LocalBroker();
+			broker.createService(instance);
+			broker.destroyService(instance);
+
+			await broker.start();
+
+			expect(startedStub).not.toBeCalled();
 		});
 	});
 
@@ -77,6 +100,49 @@ describe('LocalBroker', () => {
 
 			expect(testListener).not.toBeCalled();
 			expect(test2Listener).not.toBeCalled();
+		});
+	});
+
+	describe('#call()', () => {
+		it('should support calling a method with an object parameter', async () => {
+			const methodStub = jest.fn();
+			class TestService extends ServiceClass {
+				getName() {
+					return 'test';
+				}
+
+				method(data: { foo: string }) {
+					methodStub(data);
+				}
+			}
+
+			const broker = new LocalBroker();
+			broker.createService(new TestService());
+
+			await broker.call('test.method', { foo: 'bar' });
+
+			expect(methodStub).toBeCalledWith({ foo: 'bar' });
+		});
+
+		it('should not pass undefined when no parameter is provided', async () => {
+			const methodStub = jest.fn();
+			class TestService extends ServiceClass {
+				getName() {
+					return 'test';
+				}
+
+				method() {
+					methodStub();
+				}
+			}
+
+			const broker = new LocalBroker();
+			broker.createService(new TestService());
+
+			await broker.call('test.method');
+
+			expect(methodStub).toBeCalledTimes(1);
+			expect(methodStub).toBeCalledWith();
 		});
 	});
 });

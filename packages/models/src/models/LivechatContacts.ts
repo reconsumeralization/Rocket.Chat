@@ -288,7 +288,7 @@ export class LivechatContactsRaw extends BaseRaw<ILivechatContact> implements IL
 			...(contactId && { _id: contactId }),
 		};
 
-		return this.countDocuments(filter);
+               return this.countDocuments(filter, { readPreference: readSecondaryPreferred() });
 	}
 
 	countUnknown(): Promise<number> {

@@ -79,6 +79,36 @@ we use interfaces to register endpoints, so if you use a custom version, or miss
     }
 ```
 
+## Example: `users.sendWelcomeEmail`
+
+The endpoint `/v1/users.sendWelcomeEmail` allows administrators to resend the welcome email to a user.
+
+**Method:** `POST`
+
+**Body parameters**
+
+| Name  | Type   | Required | Description                        |
+|-------|--------|----------|------------------------------------|
+| email | string | Yes      | Email address of the target user. |
+
+**Example request**
+
+```bash
+curl -X POST https://yourserver/api/v1/users.sendWelcomeEmail \
+  -H "X-Auth-Token: <auth_token>" \
+  -H "X-User-Id: <user_id>" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "jane.doe@example.com"}'
+```
+
+**Successful response**
+
+```json
+{
+  "success": true
+}
+```
+
 ## License
 
 MIT

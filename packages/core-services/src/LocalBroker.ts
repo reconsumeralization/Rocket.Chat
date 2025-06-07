@@ -17,7 +17,7 @@ export class LocalBroker implements IBroker {
 
 	private services = new Set<IServiceClass>();
 
-	async call(method: string, data: any): Promise<any> {
+	async call(method: string, data?: any): Promise<any> {
 		return tracerActiveSpan(
 			`action ${method}`,
 			{},
@@ -29,7 +29,19 @@ export class LocalBroker implements IBroker {
 						requestID: 'ctx.requestID',
 						broker: this,
 					},
-					(): any => this.methods.get(method)?.(...data),
+					(): any => {
+						const fn = this.methods.get(method);
+						if (!fn) {
+							return;
+						}
+						if (Array.isArray(data)) {
+							return fn(...data);
+						}
+						if (typeof data === 'undefined') {
+							return fn();
+						}
+						return fn(data);
+					},
 				);
 			},
 			injectCurrentContext(),
@@ -54,6 +66,7 @@ export class LocalBroker implements IBroker {
 		}
 		instance.removeAllListeners();
 		await instance.stopped();
+		this.services.delete(instance);
 	}
 
 	createService(instance: IServiceClass): void {

@@ -152,21 +152,21 @@ export class NetworkBroker implements IBroker {
 		this.broker.createService(service);
 	}
 
-	async broadcast<T extends keyof EventSignatures>(event: T, ...args: Parameters<EventSignatures[T]>): Promise<void> {
-		return this.broker.broadcast(event, args);
-	}
+       async broadcast<T extends keyof EventSignatures>(event: T, ...args: Parameters<EventSignatures[T]>): Promise<void> {
+               return this.broker.broadcast(event, ...args);
+       }
 
-	async broadcastLocal<T extends keyof EventSignatures>(event: T, ...args: Parameters<EventSignatures[T]>): Promise<void> {
-		void this.broker.broadcastLocal(event, args);
-	}
+       async broadcastLocal<T extends keyof EventSignatures>(event: T, ...args: Parameters<EventSignatures[T]>): Promise<void> {
+               void this.broker.broadcastLocal(event, ...args);
+       }
 
-	async broadcastToServices<T extends keyof EventSignatures>(
-		services: string[],
-		event: T,
-		...args: Parameters<EventSignatures[T]>
-	): Promise<void> {
-		void this.broker.broadcast(event, args, services);
-	}
+       async broadcastToServices<T extends keyof EventSignatures>(
+               services: string[],
+               event: T,
+               ...args: Parameters<EventSignatures[T]>
+       ): Promise<void> {
+               void this.broker.broadcastToServices(services, event, ...args);
+       }
 
 	async nodeList(): Promise<IBrokerNode[]> {
 		return this.broker.call('$node.list');
