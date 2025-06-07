@@ -1,3 +1,5 @@
+import fs from 'fs/promises';
+
 import { Users } from './fixtures/userStates';
 import { HomeChannel, Utils } from './page-objects';
 import { createTargetChannel } from './utils';
@@ -58,15 +60,39 @@ test.describe.serial('export-messages', () => {
 		await expect(poUtils.getAlertByText(`You haven't selected any messages`)).toBeVisible();
 	});
 
-	test('should be able to send messages after closing export messages', async () => {
-		await poHomeChannel.sidenav.openChat(targetChannel);
-		await poHomeChannel.tabs.kebab.click({ force: true });
-		await poHomeChannel.tabs.btnExportMessages.click();
+        test('should be able to send messages after closing export messages', async () => {
+                await poHomeChannel.sidenav.openChat(targetChannel);
+                await poHomeChannel.tabs.kebab.click({ force: true });
+                await poHomeChannel.tabs.btnExportMessages.click();
 
 		await poHomeChannel.content.getMessageByText('hello world').click();
 		await poHomeChannel.tabs.exportMessages.btnCancel.click();
-		await poHomeChannel.content.sendMessage('hello export');
+                await poHomeChannel.content.sendMessage('hello export');
 
-		await expect(poHomeChannel.content.getMessageByText('hello export')).toBeVisible();
-	});
+                await expect(poHomeChannel.content.getMessageByText('hello export')).toBeVisible();
+        });
+
+       test('should download selected messages as JSON', async ({ page }) => {
+               await poHomeChannel.sidenav.openChat(targetChannel);
+               await poHomeChannel.content.sendMessage('json download');
+               await poHomeChannel.tabs.kebab.click({ force: true });
+               await poHomeChannel.tabs.btnExportMessages.click();
+
+               await poHomeChannel.tabs.exportMessages.sendEmailMethod.click();
+               await poHomeChannel.tabs.exportMessages.getMethodByName('Download file').click();
+
+               await poHomeChannel.content.getMessageByText('json download').click();
+
+               const [download] = await Promise.all([
+                       page.waitForEvent('download'),
+                       poHomeChannel.tabs.exportMessages.btnDownload.click(),
+               ]);
+
+               await expect(download.suggestedFilename()).toMatch(/\.json$/);
+               const filePath = await download.path();
+               const content = await fs.readFile(filePath!, 'utf-8');
+               const data = JSON.parse(content);
+               expect(Array.isArray(data.messages)).toBe(true);
+               expect(data.messages.length).toBeGreaterThan(0);
+       });
 });
