@@ -42,7 +42,7 @@
 	"homepage": "https://github.com/RocketChat/Rocket.Chat#readme",
 	"engines": {
 		"yarn": "4.5.3",
-		"node": "22.11.0",
+		"node": ">=22.11.0",
 		"npm": "Use yarn instead"
 	},
 	"packageManager": "yarn@4.5.3",

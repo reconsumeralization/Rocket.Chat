@@ -119,9 +119,11 @@ You can develop your own app that can be integrated with Rocket.Chat. We provide
 ## ✨ AI Utilities
 
 Rocket.Chat now ships with experimental AI helpers under `packages/ai-utils`.
-The first utility, `analyzeSentiment`, exposes simple sentiment analysis that
-other packages can leverage to build features such as automatic tone detection
-or message tagging.
+
+The `analyzeSentiment` function exposes simple sentiment analysis that other
+packages can leverage to build features such as automatic tone detection or
+message tagging. A new server method, `analyzeMessageSentiment`, allows clients
+to evaluate arbitrary text via DDP.
 
 # 🆕 Feature Request
 
