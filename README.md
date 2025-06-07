@@ -49,7 +49,7 @@ Free for 30 days. Afterward, choose between continuing to host on our secure clo
 
 You can follow these instructions to setup a dev environment:
 
-- Install **Node 20.x (LTS)** either [manually](https://nodejs.org/dist/latest-v20.x/) or using a tool like [nvm](https://github.com/creationix/nvm) or [volta](https://volta.sh/) (recommended)
+ - Install **Node 22.x (LTS)** either [manually](https://nodejs.org/dist/latest-v22.x/) or using a tool like [nvm](https://github.com/creationix/nvm) or [volta](https://volta.sh/) (recommended)
 - Install **Meteor** ([version here](apps/meteor/.meteor/release)): https://docs.meteor.com/about/install.html
 - Install **yarn**: https://yarnpkg.com/getting-started/install
 - Install **Deno 1.x**: https://docs.deno.com/runtime/fundamentals/installation/
@@ -119,6 +119,7 @@ You can develop your own app that can be integrated with Rocket.Chat. We provide
 ## ✨ AI Utilities
 
 Rocket.Chat now ships with experimental AI helpers under `packages/ai-utils`.
+
 The `analyzeSentiment` function exposes simple sentiment analysis that other
 packages can leverage to build features such as automatic tone detection or
 message tagging. A new server method, `analyzeMessageSentiment`, allows clients
