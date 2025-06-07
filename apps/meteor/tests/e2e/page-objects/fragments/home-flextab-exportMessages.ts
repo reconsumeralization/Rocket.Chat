@@ -23,9 +23,13 @@ export class HomeFlextabExportMessages {
 		return this.page.getByRole('textbox', { name: 'To additional emails' });
 	}
 
-	get btnSend() {
-		return this.page.locator('role=button[name="Send"]');
-	}
+        get btnSend() {
+                return this.page.locator('role=button[name="Send"]');
+        }
+
+       get btnDownload() {
+               return this.page.locator('role=button[name="Download"]');
+       }
 
 	get btnCancel() {
 		return this.page.locator('role=button[name="Cancel"]');
