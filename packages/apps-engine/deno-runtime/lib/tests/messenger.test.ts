@@ -1,4 +1,5 @@
 import { assertEquals, assertObjectMatch } from 'https://deno.land/std@0.203.0/assert/mod.ts';
+import { assert } from 'https://deno.land/std@0.203.0/assert/assert.ts';
 import { afterAll, beforeEach, describe, it } from 'https://deno.land/std@0.203.0/testing/bdd.ts';
 import { spy } from 'https://deno.land/std@0.203.0/testing/mock.ts';
 
@@ -92,5 +93,17 @@ describe('Messenger', () => {
         });
 
         theSpy.restore();
+    });
+
+    it('should timeout if no response is received', async () => {
+        let error: unknown;
+        try {
+            await Messenger.sendRequest({ method: 'test', params: [] }, 10);
+        } catch (e) {
+            error = e;
+        }
+
+        assert(error instanceof Error);
+        assertEquals((error as Error).message, 'Response timed out');
     });
 });
