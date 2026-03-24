@@ -9,7 +9,7 @@ export type CloudRegistrationStatus = {
 export type CloudRegistrationIntentData = {
 	device_code: string;
 	user_code: string;
-	verification_url: string;
+	verification_url?: string;
 	interval: number;
 	expires_in: number;
 };
