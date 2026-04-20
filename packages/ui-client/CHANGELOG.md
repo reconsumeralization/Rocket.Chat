@@ -20,6 +20,20 @@
   - @rocket.chat/ui-contexts@29.0.1
   </details>
 
+## 30.0.0-rc.0
+
+### Minor Changes
+
+- ([#40181](https://github.com/RocketChat/Rocket.Chat/pull/40181)) Adds file thumbnails with image preview to the message composer attachments
+
+### Patch Changes
+
+- <details><summary>Updated dependencies []:</summary>
+
+  - @rocket.chat/ui-avatar@26.0.0-rc.0
+  - @rocket.chat/ui-contexts@30.0.0-rc.0
+  </details>
+
 ## 29.0.0
 
 ### Patch Changes

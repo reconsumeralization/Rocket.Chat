@@ -18,6 +18,16 @@
   - @rocket.chat/ui-contexts@29.0.1
   </details>
 
+## 30.0.0-rc.0
+
+### Patch Changes
+
+- <details><summary>Updated dependencies [95a82f72dd45fc51d54bb1beed295315facf9109]:</summary>
+
+  - @rocket.chat/tools@0.3.0-rc.0
+  - @rocket.chat/ui-contexts@30.0.0-rc.0
+  </details>
+
 ## 29.0.0
 
 ### Patch Changes
