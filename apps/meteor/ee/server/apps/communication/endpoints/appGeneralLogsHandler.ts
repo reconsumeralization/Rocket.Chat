@@ -23,7 +23,6 @@ const errorResponse = ajv.compile<{
 export const registerAppGeneralLogsHandler = ({ api, _orch }: AppsRestApi) =>
 	void api.get(
 		'logs',
-		{ authRequired: true, permissionsRequired: ['manage-apps'], validateParams: isAppLogsProps },
 		{
 			authRequired: true,
 			permissionsRequired: ['manage-apps'],
