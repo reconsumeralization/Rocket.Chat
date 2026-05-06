@@ -1,8 +1,4 @@
 import './ddpOverREST';
-import './ddpSdkCollectionBridge';
-import './subscribeViaSDK';
-import './stubMeteorStream';
-import './killMeteorStream';
 import './desktopInjection';
 import './oauthRedirectUri';
 import './settings';

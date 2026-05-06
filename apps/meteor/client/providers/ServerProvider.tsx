@@ -11,7 +11,6 @@ import type { Method, PathFor, OperationParams, OperationResult, UrlParams, Path
 import type { UploadResult, ServerContextValue } from '@rocket.chat/ui-contexts';
 import { ServerContext } from '@rocket.chat/ui-contexts';
 import { Meteor } from 'meteor/meteor';
-import { Tracker } from 'meteor/tracker';
 import { compile } from 'path-to-regexp';
 import { useMemo, type ReactNode } from 'react';
 
@@ -19,15 +18,11 @@ import { sdk } from '../../app/utils/client/lib/SDKClient';
 import { Info as info } from '../../app/utils/rocketchat.info';
 import { useReactiveValue } from '../hooks/useReactiveValue';
 import { absoluteUrl } from '../lib/absoluteUrl';
-import { ensureConnectedAndAuthenticated, getDdpSdk } from '../lib/sdk/ddpSdk';
-import { isSdkTransportEnabled } from '../lib/sdk/sdkTransportEnabled';
-
-const sdkTransportEnabled = isSdkTransportEnabled();
 
 const callMethod = <MethodName extends ServerMethodName>(
 	methodName: MethodName,
 	...args: ServerMethodParameters<MethodName>
-): Promise<ServerMethodReturn<MethodName>> => sdk.call(methodName, ...(args as any)) as Promise<ServerMethodReturn<MethodName>>;
+): Promise<ServerMethodReturn<MethodName>> => Meteor.callAsync(methodName, ...args);
 
 const callEndpoint = <TMethod extends Method, TPathPattern extends PathPattern>({
 	method,
@@ -78,66 +73,11 @@ const getStream =
 const writeStream = <N extends StreamNames, K extends StreamKeys<N>>(streamName: N, streamKey: K, ...args: StreamerCallbackArgs<N, K>) =>
 	sdk.publish(streamName, [streamKey, ...args]);
 
-const disconnect = sdkTransportEnabled
-	? () => {
-			Meteor.disconnect();
-			try {
-				getDdpSdk().connection.close();
-			} catch {
-				// no-op — DDPSDK may not be connected yet
-			}
-		}
-	: () => Meteor.disconnect();
+const disconnect = () => Meteor.disconnect();
 
-const reconnect = sdkTransportEnabled
-	? () => {
-			Meteor.reconnect();
-			// ensureConnectedAndAuthenticated handles both 'connect' and loginWithToken,
-			// so reconnecting here also re-establishes the DDPSDK session with the
-			// same token Meteor resumes with.
-			void ensureConnectedAndAuthenticated();
-		}
-	: () => Meteor.reconnect();
+const reconnect = () => Meteor.reconnect();
 
-// With SDK transport on, combine Meteor's DDP status with DDPSDK's so the
-// ConnectionStatusBar / idle-connection hooks reflect the worst-case of both
-// transports. With the flag off, route status straight through Meteor —
-// Meteor.status() is already Tracker-reactive, so adding a second dependency
-// via the meteor-backed proxy's emitter would just double-fire the autorun.
-const ddpSdkStatusDep = sdkTransportEnabled ? new Tracker.Dependency() : undefined;
-if (sdkTransportEnabled) {
-	getDdpSdk().connection.on('connection', () => ddpSdkStatusDep!.changed());
-}
-
-type CombinedStatus = ReturnType<typeof Meteor.status>;
-
-const sdkStatusToMeteor = (sdkStatus: string, meteor: CombinedStatus): CombinedStatus => {
-	const retry = { retryCount: meteor.retryCount, retryTime: meteor.retryTime };
-
-	switch (sdkStatus) {
-		case 'connected':
-			return { status: 'connected', connected: true, ...retry };
-		case 'connecting':
-			return { status: 'connecting', connected: false, ...retry };
-		case 'reconnecting':
-			return { status: 'connecting', connected: false, ...retry };
-		case 'failed':
-			return { status: 'failed', connected: false, ...retry };
-		case 'closed':
-		case 'disconnected':
-			return { status: 'waiting', connected: false, ...retry };
-		case 'idle':
-		default:
-			return { status: 'offline', connected: false, ...retry };
-	}
-};
-
-const getStatus = sdkTransportEnabled
-	? () => {
-			ddpSdkStatusDep!.depend();
-			return sdkStatusToMeteor(getDdpSdk().connection.status, Meteor.status());
-		}
-	: () => Meteor.status();
+const getStatus = () => ({ ...Meteor.status() });
 
 type ServerProviderProps = { children?: ReactNode };
 

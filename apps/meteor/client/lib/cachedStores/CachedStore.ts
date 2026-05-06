@@ -50,11 +50,7 @@ export abstract class CachedStore<T extends IRocketChatRecord, U = T> implements
 
 	protected eventType: StreamNames;
 
-	// Bumped from 18 → 19 to invalidate caches populated before the DDPSDK
-	// wire encoding was switched from JSON to EJSON. Entries written by the
-	// JSON window stored dates as ISO strings instead of Date instances, so
-	// fields like subscription.ls would fail `.getTime()` when read back.
-	private readonly version = 19;
+	private readonly version = 18;
 
 	private updatedAt = new Date(0);
 
