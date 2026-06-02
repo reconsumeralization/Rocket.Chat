@@ -1,5 +1,21 @@
 # @rocket.chat/meteor
 
+## 8.4.3
+
+### Patch Changes
+
+- Bump @rocket.chat/meteor version.
+
+- Bump @rocket.chat/meteor version.
+
+- ([#40771](https://github.com/RocketChat/Rocket.Chat/pull/40771) by [@dionisio-bot](https://github.com/dionisio-bot)) Fixes the Chat Limits locking mechanism to allow bot agents to skip the lock as they aren't limited
+
+- <details><summary>Updated dependencies []:</summary>
+
+  - @rocket.chat/core-typings@8.4.3
+  - @rocket.chat/rest-typings@8.4.3
+  </details>
+
 ## 8.4.2
 
 ### Patch Changes
