@@ -1,6 +1,6 @@
 {
 	"name": "rocket.chat",
-	"version": "8.4.3",
+	"version": "8.5.0-rc.6",
 	"private": true,
 	"description": "Rocket.Chat Monorepo",
 	"homepage": "https://github.com/RocketChat/Rocket.Chat#readme",
@@ -172,11 +172,11 @@
 	},
 	"packageManager": "yarn@4.12.0",
 	"engines": {
-		"node": "22.22.2",
+		"node": "22.22.3",
 		"yarn": "4.12.0"
 	},
 	"volta": {
-		"node": "22.22.2",
+		"node": "22.22.3",
 		"yarn": "4.12.0"
 	},
 	"houston": {
