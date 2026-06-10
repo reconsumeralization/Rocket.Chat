@@ -8996,11 +8996,11 @@ __metadata:
   resolution: "@rocket.chat/apps-engine@workspace:packages/apps-engine"
   dependencies:
     "@rocket.chat/ui-kit": "workspace:~"
-    "@types/node": "npm:~22.16.5"
-    eslint: "npm:~9.39.3"
+    "@types/node": "npm:~22.19.17"
+    eslint: "npm:~9.39.4"
     npm-run-all: "npm:^4.1.5"
     rimraf: "npm:^6.0.1"
-    typedoc: "npm:~0.28.16"
+    typedoc: "npm:~0.28.10"
     typescript: "npm:~5.9.3"
     uuid: "npm:~11.1.1"
   languageName: unknown
@@ -11057,7 +11057,7 @@ __metadata:
     "@react-aria/toolbar": "*"
     "@rocket.chat/fuselage": "*"
     "@rocket.chat/icons": "*"
-    "@rocket.chat/ui-client": 30.0.0
+    "@rocket.chat/ui-client": 31.0.0-rc.0
     react: "*"
     react-dom: "*"
   languageName: unknown
@@ -11328,7 +11328,7 @@ __metadata:
   peerDependencies:
     "@rocket.chat/layout": "*"
     "@rocket.chat/tools": 0.3.0
-    "@rocket.chat/ui-contexts": 30.0.0
+    "@rocket.chat/ui-contexts": 31.0.0-rc.0
     "@tanstack/react-query": "*"
     react: "*"
     react-hook-form: "*"
@@ -21880,7 +21880,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:~9.39.3, eslint@npm:~9.39.4":
+"eslint@npm:~9.39.4":
   version: 9.39.4
   resolution: "eslint@npm:9.39.4"
   dependencies:
@@ -36369,7 +36369,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc@npm:~0.28.16":
+"typedoc@npm:~0.28.10":
   version: 0.28.19
   resolution: "typedoc@npm:0.28.19"
   dependencies:
