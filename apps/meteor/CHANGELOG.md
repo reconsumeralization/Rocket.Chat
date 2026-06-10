@@ -5,7 +5,6 @@
 ### Patch Changes
 
 - Bump @rocket.chat/meteor version.
-
 - <details><summary>Updated dependencies []:</summary>
 
   - @rocket.chat/core-typings@8.5.0-rc.4
@@ -17,7 +16,6 @@
 ### Patch Changes
 
 - Bump @rocket.chat/meteor version.
-
 - ([#40635](https://github.com/RocketChat/Rocket.Chat/pull/40635) by [@copilot-swe-agent](https://github.com/copilot-swe-agent)) Fixes the Chat Limits locking mechanism to allow bot agents to skip the lock as they aren't limited
 
 - <details><summary>Updated dependencies []:</summary>
@@ -173,6 +171,76 @@
   - @rocket.chat/network-broker@0.2.36-rc.0
   - @rocket.chat/ui-avatar@27.0.0-rc.0
   - @rocket.chat/ui-video-conf@31.0.0-rc.0
+
+  </details>
+
+## 8.4.3
+
+### Patch Changes
+
+- Bump @rocket.chat/meteor version.
+- Bump @rocket.chat/meteor version.
+
+- ([#40771](https://github.com/RocketChat/Rocket.Chat/pull/40771) by [@dionisio-bot](https://github.com/dionisio-bot)) Fixes the Chat Limits locking mechanism to allow bot agents to skip the lock as they aren't limited
+
+- <details><summary>Updated dependencies []:</summary>
+
+  - @rocket.chat/core-typings@8.4.3
+  - @rocket.chat/rest-typings@8.4.3
+  </details>
+
+## 8.4.2
+
+### Patch Changes
+
+- ([#40627](https://github.com/RocketChat/Rocket.Chat/pull/40627) by [@dionisio-bot](https://github.com/dionisio-bot)) Ensures OAuth tokens are cleaned up after user deactivation
+
+- Bump @rocket.chat/meteor version.
+
+- Bump @rocket.chat/meteor version.
+
+- ([#40527](https://github.com/RocketChat/Rocket.Chat/pull/40527) by [@dionisio-bot](https://github.com/dionisio-bot)) Fixes the `users.presence` endpoint returning an empty array when called with multiple comma-separated IDs, caused by `ajvQuery` coercing the string into a single-element array after the OpenAPI migration
+
+- ([#40559](https://github.com/RocketChat/Rocket.Chat/pull/40559) by [@dionisio-bot](https://github.com/dionisio-bot)) Ensures that deactivated users have their login tokens cleaned up in users.deactivateidle
+
+- ([#40539](https://github.com/RocketChat/Rocket.Chat/pull/40539) by [@dionisio-bot](https://github.com/dionisio-bot)) Ensures the Meteor method for translateMessage validates access and types
+
+- ([#40577](https://github.com/RocketChat/Rocket.Chat/pull/40577) by [@dionisio-bot](https://github.com/dionisio-bot)) Ensures the visitor token is not present in the visitors.info response
+
+- ([#40547](https://github.com/RocketChat/Rocket.Chat/pull/40547) by [@dionisio-bot](https://github.com/dionisio-bot)) Ensures the autotranslate.translateMessage endpoint checks for room access
+
+- <details><summary>Updated dependencies [b0c593db9bc0bbbb603e673ddcdc48aad4f4e721, f422eb613d8cae43dc1e44d71b6ecb5a0a9c5d92, 3a3f0e1103bd0b8aaf93c16300ed664aed7a67a1]:</summary>
+
+  - @rocket.chat/model-typings@2.2.2
+  - @rocket.chat/models@2.2.2
+  - @rocket.chat/rest-typings@8.4.2
+  - @rocket.chat/core-typings@8.4.2
+  </details>
+
+## 8.4.1
+
+### Patch Changes
+
+- Bump @rocket.chat/meteor version.
+
+### Patch Changes
+
+- Bump @rocket.chat/meteor version.
+- Bump @rocket.chat/meteor version.
+
+- ([#40410](https://github.com/RocketChat/Rocket.Chat/pull/40410) by [@dionisio-bot](https://github.com/dionisio-bot)) Disables SAML login when it is set to validate signatures without the proper configuration for it
+
+- ([#40459](https://github.com/RocketChat/Rocket.Chat/pull/40459) by [@dionisio-bot](https://github.com/dionisio-bot)) Allows users to search for attribute values when assigning them to rooms
+
+- ([#40410](https://github.com/RocketChat/Rocket.Chat/pull/40410) by [@dionisio-bot](https://github.com/dionisio-bot)) Security Hotfix (https://docs.rocket.chat/docs/security-fixes-and-updates)
+
+- <details><summary>Updated dependencies [5b291c38600757482aaf261a02487abdf5f14007]:</summary>
+
+  - @rocket.chat/model-typings@2.2.1
+  - @rocket.chat/core-typings@8.4.1
+  - @rocket.chat/models@2.2.1
+  - @rocket.chat/i18n@3.0.1
+  - @rocket.chat/rest-typings@8.4.1
   </details>
 
 ## 8.4.0

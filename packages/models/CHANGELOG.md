@@ -38,6 +38,34 @@
   - @rocket.chat/model-typings@2.3.0-rc.0
   - @rocket.chat/rest-typings@8.5.0-rc.0
   - @rocket.chat/core-typings@8.5.0-rc.0
+
+## 2.2.2
+
+### Patch Changes
+
+- ([#40627](https://github.com/RocketChat/Rocket.Chat/pull/40627) by [@dionisio-bot](https://github.com/dionisio-bot)) Ensures OAuth tokens are cleaned up after user deactivation
+
+- ([#40559](https://github.com/RocketChat/Rocket.Chat/pull/40559) by [@dionisio-bot](https://github.com/dionisio-bot)) Ensures that deactivated users have their login tokens cleaned up in users.deactivateidle
+
+- <details><summary>Updated dependencies [b0c593db9bc0bbbb603e673ddcdc48aad4f4e721, f422eb613d8cae43dc1e44d71b6ecb5a0a9c5d92, 3a3f0e1103bd0b8aaf93c16300ed664aed7a67a1]:</summary>
+
+  - @rocket.chat/model-typings@2.2.2
+  - @rocket.chat/rest-typings@8.4.2
+  - @rocket.chat/core-typings@8.4.2
+    </details>
+  </details>
+
+## 2.2.1
+
+### Patch Changes
+
+- ([#40410](https://github.com/RocketChat/Rocket.Chat/pull/40410) by [@dionisio-bot](https://github.com/dionisio-bot)) Security Hotfix (https://docs.rocket.chat/docs/security-fixes-and-updates)
+
+- <details><summary>Updated dependencies [5b291c38600757482aaf261a02487abdf5f14007]:</summary>
+
+  - @rocket.chat/model-typings@2.2.1
+  - @rocket.chat/core-typings@8.4.1
+  - @rocket.chat/rest-typings@8.4.1
   </details>
 
 ## 2.2.0

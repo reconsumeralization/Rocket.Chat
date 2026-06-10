@@ -5,8 +5,7 @@
 ### Patch Changes
 
 - <details><summary>Updated dependencies []:</summary>
-
-  - @rocket.chat/core-typings@8.5.0-rc.4
+- @rocket.chat/core-typings@8.5.0-rc.4
   </details>
 
 ## 8.5.0-rc.3
@@ -67,6 +66,35 @@
 
   - @rocket.chat/ui-kit@1.1.0-rc.0
   - @rocket.chat/core-typings@8.5.0-rc.0
+  </details>
+
+## 8.4.3
+
+### Patch Changes
+
+- <details><summary>Updated dependencies []:</summary>
+
+  - @rocket.chat/core-typings@8.4.3
+  </details>
+
+## 8.4.2
+
+### Patch Changes
+
+- ([#40527](https://github.com/RocketChat/Rocket.Chat/pull/40527) by [@dionisio-bot](https://github.com/dionisio-bot)) Fixes the `users.presence` endpoint returning an empty array when called with multiple comma-separated IDs, caused by `ajvQuery` coercing the string into a single-element array after the OpenAPI migration
+
+- <details><summary>Updated dependencies []:</summary>
+
+  - @rocket.chat/core-typings@8.4.2
+  </details>
+
+## 8.4.1
+
+### Patch Changes
+
+- <details><summary>Updated dependencies [5b291c38600757482aaf261a02487abdf5f14007]:</summary>
+
+  - @rocket.chat/core-typings@8.4.1
   </details>
 
 ## 8.4.0
